@@ -1,0 +1,37 @@
+AXIOM PUBLIC LICENSE (APL-1.0)
+Version 1.0.0
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. DEFINITIONS
+   "The Licensor" refers to Chacha Mwise / Aquaflux Tech.
+   "The Software" refers to the AXIOM RE Core files (core.py, bridge.py, gym.py).
+   "The Kernel" specifically refers to the logic contained within core.py.
+
+2. GRANT OF LICENSE
+   The Licensor grants you a non-exclusive, royalty-free license to use, copy,
+   and modify the Software for:
+   (a) Academic research and publication.
+   (b) Non-commercial personal use.
+   (c) Evaluation and testing within commercial entities.
+
+3. INTEGRITY CLAUSE (The "Sealed Core")
+   You may NOT modify the file 'core.py' if you distribute the Software or
+   deploy it in a production environment. The Kernel must remain a sealed
+   source of truth. Wrappers and extensions are permitted.
+
+4. ATTRIBUTION
+   Any publication, product, or system that utilizes this Software must
+   prominently display the following notice:
+   "Powered by AXIOM RE Kernel. Copyright (c) 2026 Chacha Mwise."
+
+5. COMMERCIAL RESTRICTION
+   You may NOT sell, lease, or offer this Software as a standalone
+   Software-as-a-Service (SaaS) or control library without a separate
+   Commercial License Agreement from Chacha Mwise / Aquaflux Tech.
+
+6. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
+   NON-INFRINGEMENT.
