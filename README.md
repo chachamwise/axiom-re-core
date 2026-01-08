@@ -79,14 +79,6 @@ AXIOM demonstrates **zero kernel-defined safety invariant violations** in the pr
 | **Safety Violations** | **142** | **0** |
 | Convergence Time | Slow (Trial & Error) | Fast (Guided) |
 
-## 📜 Citation
-
-If you use AXIOM in your research, you must cite the architecture:
-
-> Mwise, C. (2026). *AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems*. Aquaflux Tech.
-
-See `CITATION.cff` for BibTeX format.
-
 ## 🛡️ License & Integrity
 
 Licensed under the **AXIOM Public License (APL-1.0)**. 
@@ -94,3 +86,21 @@ Licensed under the **AXIOM Public License (APL-1.0)**.
 * **Free for academic research and non-commercial use.**
 * **Commercial use** requires a distinct agreement.
 * **Integrity Clause:** The file `core.py` (The Physics Kernel) may **NOT** be modified. It must be used as a sealed dependency to maintain the validity of safety guarantees.
+
+---
+
+## 📜 Citation
+
+If you use AXIOM in your research, you must cite the architecture:
+
+> Mwise, C. (2026). *AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems*. Aquaflux Tech.
+
+**BibTeX:**
+```bibtex
+@software{axiom_re_core,
+  author = {Mwise, Chacha},
+  title = {AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems},
+  version = {1.0.0},
+  year = {2026},
+  url = {[https://github.com/chachamwise/axiom-re-core](https://github.com/chachamwise/axiom-re-core)}
+}
