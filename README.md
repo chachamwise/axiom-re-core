@@ -38,6 +38,7 @@ The system operates as a strict three-layer hierarchy. For a detailed engineerin
 git clone https://github.com/chachamwise/axiom-re-core.git
 cd axiom-re-core
 pip install -r requirements.txt
+```
 
 ## Usage Example
 
@@ -63,6 +64,7 @@ if verdict['status'] == 'BLOCKED':
     print(f"👉 Safe Action Substituted: {verdict['safe_action']}")
 else:
     print("✅ Action Approved")
+```
 
 ## 🧪 Proven Safety
 
