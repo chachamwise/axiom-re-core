@@ -41,6 +41,7 @@ pip install -r requirements.txt
 
 ## Usage Example
 
+```python
 from axiom_re import PhysicsKernel, axiom_permission_check
 
 # 1. Define Machine DNA (e.g., A 15kW Water Pump)
