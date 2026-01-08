@@ -23,7 +23,7 @@ Standard AI (RL/NN) is probabilistic and therefore inherently unsafe for zero-to
 
 The system operates as a strict three-layer hierarchy. For a detailed engineering breakdown and safety guarantees, see the [Formal Scope](docs/FORMAL_SCOPE.md).
 
-![AXIOM RE Architecture](docs/figures/axiom_re_architecture_v1.svg)
+![AXIOM RE Architecture](https://raw.githubusercontent.com/chachamwise/axiom-re-core/main/docs/figures/axiom_re_architecture_v1.svg)
 
 1.  **The Agent (External):** Generates a proposed control action ($a_t$). This layer is untrusted and stochastic.
 2.  **The Constitutional Bridge (`bridge.py`):** A stateless interface that intercepts $a_t$. It queries the Kernel to project the future state $\hat{s}_{t+1}$.
