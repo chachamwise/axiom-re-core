@@ -10,7 +10,7 @@
 
 ---
 
-**AXIOM RE (Recursive Engine)** is a stateless, physics-constrained verification architecture for autonomous industrial systems. It decouples physical laws from control logic, acting as an immutable "Constitutional Layer" for AI agents.
+**AXIOM RE (Reasoning Engine)** is a stateless, physics-constrained verification architecture for autonomous industrial systems. It decouples physical laws from control logic, acting as an immutable "Constitutional Layer" for AI agents.
 
 ## 🧠 The Philosophy: "Code is Law"
 
