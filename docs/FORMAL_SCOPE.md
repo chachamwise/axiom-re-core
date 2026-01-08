@@ -58,4 +58,4 @@ It guarantees that the *AI Agent* will **never cause a physics violation** under
 
 **References:**  
 * See experimental validation in `experiments/safety_proof.py`  
-* See preprint abstract: [PREPRINT_ABSTRACT.md](docs/PREPRINT_ABSTRACT.md)
+* See preprint abstract: [Preprint Abstract](PREPRINT_ABSTRACT.md)
