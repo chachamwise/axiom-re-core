@@ -66,8 +66,7 @@ else:
 ## 🧪 Proven Safety
 
 AXIOM demonstrates **zero kernel-defined safety invariant violations** in the provided experiments.
-See the experimental proof script in [experiments/safety_proof.py](experiments/safety_proof.py).
-
+See the experimental proof script here: [Safety Proof Code](https://github.com/chachamwise/axiom-re-core/blob/main/experiments/safety_proof.py)
 
 | Metric | Standard RL (PPO) | AXIOM-Constrained RL |
 | :--- | :---: | :---: |
