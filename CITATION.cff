@@ -4,7 +4,7 @@ authors:
   - family-names: "Mwise"
     given-names: "Chacha"
     affiliation: "Aquaflux Tech"
-title: "AXIOM: A Stateless Physics-Constrained Verification Architecture"
+title: "AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems"
 version: 1.0.0
 date-released: 2026-01-08
 url: "https://github.com/chachamwise/axiom-re-core"
