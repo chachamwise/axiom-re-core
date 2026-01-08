@@ -102,5 +102,5 @@ If you use AXIOM in your research, you must cite the architecture:
   title = {AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems},
   version = {1.0.0},
   year = {2026},
-  url = {[https://github.com/chachamwise/axiom-re-core](https://github.com/chachamwise/axiom-re-core)}
+  url = {https://github.com/chachamwise/axiom-re-core}
 }
