@@ -4,9 +4,8 @@
 ![License](https://img.shields.io/badge/license-AXIOM_Public_License-red.svg)
 ![Status](https://img.shields.io/badge/integrity-SEALED-green.svg)
 
-> **⚠️ DISCLAIMER:** This repository contains **no AI, policies, or learning components.**  
-> It provides only the deterministic verification kernel (`PhysicsKernel`) and the constitutional interface (`Bridge`).  
-> AI agents utilizing this kernel must be implemented separately (see `axiom-ai`).
+> **⚠️ DISCLAIMER:** This repository contains **no AI, policies, or learning components.** > It provides only the deterministic verification kernel (`PhysicsKernel`) and the constitutional interface (`Bridge`).  
+> AI agents utilizing this kernel can be found in the [`experiments/`](experiments/) folder.
 
 ---
 
