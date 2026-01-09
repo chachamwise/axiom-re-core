@@ -1,6 +1,6 @@
 # AXIOM: The Universal Physics Kernel
 
-![Version](https://img.shields.io/badge/version-1.0.0_Gold-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1_Gold-blue.svg)
 ![License](https://img.shields.io/badge/license-AXIOM_Public_License-red.svg)
 ![Status](https://img.shields.io/badge/integrity-SEALED-green.svg)
 
