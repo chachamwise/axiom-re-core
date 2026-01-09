@@ -9,7 +9,7 @@ import random
 import pandas as pd
 
 # 1. LINK TO SOURCE CODE
-# This tells Python to look in the 'src' folder for your library
+# Tells Python to look in the 'src' folder for library
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 # 2. IMPORT THE REAL BRIDGE
@@ -19,7 +19,7 @@ from axiom_re import axiom_permission_check
 # --- CONFIGURATION ---
 EPISODES = 500
 SAFE_LIMIT_PRESSURE = 9.5
-# This DNA matches your README example
+# This DNA follows the README schema
 MACHINE_DNA = {
     'max_head': 10.0, 
     'max_flow': 50.0, 
@@ -51,7 +51,7 @@ def run_experiment():
 
     for i in range(EPISODES):
         # --- 1. STANDARD AI (Reckless) ---
-        # It guesses a random action (0.0 to 1.1) - often unsafe
+        # Guesses a random action (0.0 to 1.1) - often unsafe
         raw_action = random.uniform(0.0, 1.1) 
         
         # Standard executes directly:
@@ -61,11 +61,11 @@ def run_experiment():
         std_history.append(std_violations)
 
         # --- 2. AXIOM AI (Protected) ---
-        # It proposes the SAME reckless action
+        # Proposes the SAME reckless action
         intent = {'ratio': raw_action}
         
         # --- THE REAL TEST: CALL THE LIBRARY ---
-        # We query your actual bridge.py
+        # Query actual bridge.py
         verdict = axiom_permission_check(MACHINE_DNA, {'pressure': 0.0}, intent)
         
         if verdict['status'] == 'BLOCKED':
@@ -77,7 +77,7 @@ def run_experiment():
         # AXIOM executes:
         p_axm = env.step(final_action)
         if p_axm > SAFE_LIMIT_PRESSURE:
-            axm_violations += 1 # If this increases, your core.py has a bug.
+            axm_violations += 1 # If this increases, core.py has a bug.
         axm_history.append(axm_violations)
 
     return std_history, axm_history
