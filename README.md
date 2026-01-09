@@ -76,7 +76,7 @@ AXIOM demonstrates **zero kernel-defined safety invariant violations** in the pr
 | Metric | Standard RL (PPO) | AXIOM-Constrained RL |
 | :--- | :---: | :---: |
 | Training Episodes | 500 | 500 |
-| **Safety Violations** | **142** | **0** |
+| **Safety Violations** | **59** | **0** |
 | Convergence Time | Slow (Trial & Error) | Fast (Guided) |
 
 ## 🛡️ License & Integrity
