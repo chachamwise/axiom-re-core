@@ -5,8 +5,8 @@ authors:
     given-names: "Chacha"
     affiliation: "Aquaflux Tech"
 title: "AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems"
-version: 1.0.0
-date-released: 2026-01-08
+version: 1.0.2
+date-released: 2026-01-18
 url: "https://github.com/chachamwise/axiom-re-core"
 keywords:
   - "industrial-ai"

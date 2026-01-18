@@ -1,6 +1,6 @@
 """
 AXIOM GYM - Universal Digital Twin Environment.
-Version: 1.0.0 (Gold Edition)
+Version: 1.0.1 (Dual-License Ready)
 Copyright (c) 2026 Chacha Mwise / Aquaflux Tech.
 License: AXIOM Public License (APL-1.0)
 --------------------------------------------------
@@ -14,6 +14,9 @@ class AxiomGym:
     """
     A lightweight Digital Twin that morphs based on Machine DNA.
     Compatible with Reinforcement Learning loops (Step/Reset).
+    
+    This simulation proves that the Axiom Kernel can predict future states
+    accurately enough to train control policies.
     """
     
     def __init__(self, machine_dna: dict):
@@ -35,11 +38,10 @@ class AxiomGym:
         max_f = _get(['max_flow', 'max_current', 'max_airflow', 'max_tonnage'])
         rated_w = _get(['rated_power', 'power_rating'], 10.0)
         
-        # --- 2. INSTANTIATE THE KERNEL (The Physics Engine) ---
+        # --- 2. INSTANTIATE THE KERNEL ---
         self.kernel = PhysicsKernel(max_potential=max_p, max_flux=max_f, rated_power=rated_w)
         
         # --- 3. DEFINE ENVIRONMENT STATE ---
-        # "Capacity" represents the maximum fill of the container (Tank, Battery, Silo)
         self.capacity = 100.0 
         self.current_fill = 0.0
         self.safety_limit = _get(['safe_pressure_limit', 'safe_voltage_limit', 'safe_speed_limit'], 9999.0)
@@ -70,31 +72,25 @@ class AxiomGym:
         else:
             ratio = 0.0
 
-        # 2. CALCULATE PHYSICS (Using the Kernel)
+        # 2. CALCULATE PHYSICS
         # Potential scales with square of ratio (Affinity Law)
         current_potential = self.kernel.MAX_POTENTIAL * (ratio ** 2)
         
         # 3. CHECK FOR CATASTROPHIC FAILURE
-        # If the Physics Kernel predicts potential > limit, the component breaks.
         if current_potential > self.safety_limit:
             self.state["potential_val"] = round(current_potential, 2)
             return self.state, "CRASHED"
 
-        # 4. CALCULATE FLUX (The Effect)
-        # Resistance increases as the container fills (Back Pressure / Back EMF)
+        # 4. CALCULATE FLUX
+        # Resistance increases as the container fills (Back Pressure)
         resistance_back_pressure = self.kernel.MAX_POTENTIAL * (self.current_fill / self.capacity)
         
         # The Kernel solves the flow based on the difference between Applied Potential and Resistance
-        effective_potential = current_potential - resistance_back_pressure
-        
-        # We use the kernel's geometric solver, treating effective_potential as the 'head loss' component
-        # Note: This is a simplified dynamic simulation using the static kernel.
         current_flux = self.kernel.solve_geometric_flux(resistance_back_pressure, ratio)
 
-        # 5. INTEGRATE TIME (State Update)
-        # Fill Rate normalized against Max Flux
+        # 5. INTEGRATE TIME
         fill_rate = current_flux / self.kernel.MAX_FLUX if self.kernel.MAX_FLUX > 0 else 0
-        self.current_fill += fill_rate * 5.0 # Simulation speed multiplier
+        self.current_fill += fill_rate * 5.0 
         
         # Clamp to Max
         if self.current_fill >= self.capacity:

@@ -1,6 +1,6 @@
 # AXIOM: The Universal Physics Kernel
 
-![Version](https://img.shields.io/badge/version-1.0.1_Gold-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.2_Gold-blue.svg)
 ![License](https://img.shields.io/badge/license-AXIOM_Public_License-red.svg)
 ![Status](https://img.shields.io/badge/integrity-SEALED-green.svg)
 
@@ -22,7 +22,7 @@ Standard AI (RL/NN) is probabilistic and therefore inherently unsafe for zero-to
 
 The system operates as a strict three-layer hierarchy. For a detailed engineering breakdown and safety guarantees, see the [Formal Scope](docs/FORMAL_SCOPE.md).
 
-![AXIOM RE Architecture](https://raw.githubusercontent.com/chachamwise/axiom-re-core/main/docs/figures/axiom_re_architecture_v1.svg)
+
 
 1.  **The Agent (External):** Generates a proposed control action ($a_t$). This layer is untrusted and stochastic.
 2.  **The Constitutional Bridge (`bridge.py`):** A stateless interface that intercepts $a_t$. It queries the Kernel to project the future state $\hat{s}_{t+1}$.
@@ -34,7 +34,7 @@ The system operates as a strict three-layer hierarchy. For a detailed engineerin
 
 ### Installation
 ```bash
-git clone https://github.com/chachamwise/axiom-re-core.git
+git clone [https://github.com/chachamwise/axiom-re-core.git](https://github.com/chachamwise/axiom-re-core.git)
 cd axiom-re-core
 pip install -r requirements.txt
 ```
@@ -42,7 +42,8 @@ pip install -r requirements.txt
 ## Usage Example
 
 ```python
-from axiom_re import PhysicsKernel, axiom_permission_check
+# Import directly from the verified source package
+from src.axiom_re import PhysicsKernel, axiom_permission_check
 
 # 1. Define Machine DNA (e.g., A 15kW Water Pump)
 dna = {
@@ -75,18 +76,28 @@ AXIOM demonstrates **zero kernel-defined safety invariant violations** in the pr
 | Metric | Standard RL (PPO) | AXIOM-Constrained RL |
 | :--- | :---: | :---: |
 | Training Episodes | 500 | 500 |
-| **Safety Violations** | **59** | **0** |
+| **Safety Violations** | **51** | **0** |
 | Convergence Time | Slow (Trial & Error) | Fast (Guided) |
 
-## 🛡️ License & Integrity
+## 🛡️ License & Commercial Rights
 
-Licensed under the **AXIOM Public License (APL-1.0)**. 
+**1. The "Open Core" Promise (Academic & Personal Use)**
+This repository is licensed under the **AXIOM Public License (APL-1.0)** (Source Available).
+* ✅ **Allowed:** Research, Safety Audits, Non-Commercial Testing, Student Projects.
+* ❌ **Forbidden:** Removing this license, changing `core.py` without renaming the project, or selling this code as a standalone product.
 
-* **Free for academic research and non-commercial use.**
-* **Commercial use** requires a distinct agreement.
-* **Integrity Clause:** The file `core.py` (The Physics Kernel) may **NOT** be modified. It must be used as a sealed dependency to maintain the validity of safety guarantees.
+**2. Commercial Use & Dual Licensing**
+**Axiom Re Core** is "Source Available," not Permissive Open Source.
+* You may **NOT** use this kernel in a commercial SaaS, Industrial Control System, or Paid Product without a commercial license.
+* **Enterprise Partners:** Aquaflux Tech offers a **Commercial License** that supersedes the APL-1.0, allowing for proprietary integration, white-labeling, and modification.
+
+**3. The "Sealed Core" Brand Policy**
+"Axiom", "Axiom Core", and the Aquaflux logo are legally recognized brand names of Aquaflux Tech.
+* **Modification Policy:** If you modify `core.py`, you **MUST** rename your fork (e.g., "My-Safety-Kernel"). You may not use the name "Axiom" for modified versions, as they no longer guarantee our specific safety standards.
 
 ---
+*For Commercial Licensing & Integrations: licensing@aquaflux.co.tz*
+
 
 ## 📜 Citation
 
@@ -99,7 +110,7 @@ If you use AXIOM in your research, you must cite the architecture:
 @software{axiom_re_core,
   author = {Mwise, Chacha},
   title = {AXIOM: A Stateless Physics-Constrained Verification Architecture for Safe Autonomous Systems},
-  version = {1.0.0},
+  version = {1.0.1},
   year = {2026},
   url = {https://github.com/chachamwise/axiom-re-core}
 }

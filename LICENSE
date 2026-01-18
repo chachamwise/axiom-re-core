@@ -1,37 +1,66 @@
 AXIOM PUBLIC LICENSE (APL-1.0)
-Version 1.0.0
+Version 1.0.1 (Dual-License Ready)
+
+Copyright (c) 2026 Aquaflux Tech (Tanzania). All Rights Reserved.
 
 TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
 1. DEFINITIONS
-   "The Licensor" refers to Chacha Mwise / Aquaflux Tech.
-   "The Software" refers to the AXIOM RE Core files (core.py, bridge.py, gym.py).
-   "The Kernel" specifically refers to the logic contained within core.py.
+   "Licensor" refers to Aquaflux Tech and its founder, Chacha Mwise.
+   "Software" refers to the source code, object code, and documentation associated 
+   with the AXIOM RE Core (including but not limited to core.py, bridge.py, gym.py).
+   "Kernel" specifically refers to the deterministic logic and invariants 
+   contained within 'core.py'.
 
-2. GRANT OF LICENSE
-   The Licensor grants you a non-exclusive, royalty-free license to use, copy,
-   and modify the Software for:
-   (a) Academic research and publication.
-   (b) Non-commercial personal use.
-   (c) Evaluation and testing within commercial entities.
+2. GRANT OF LICENSE (LIMITED)
+   The Licensor grants you a worldwide, non-exclusive, royalty-free license to 
+   use and copy the Software SOLELY for the following purposes:
+   (a) Academic research, study, and publication.
+   (b) Non-commercial personal experimentation.
+   (c) Internal evaluation and testing within commercial entities (non-production).
 
-3. INTEGRITY CLAUSE (The "Sealed Core")
-   You may NOT modify the file 'core.py' if you distribute the Software or
-   deploy it in a production environment. The Kernel must remain a sealed
-   source of truth. Wrappers and extensions are permitted.
+   **No rights are granted for commercial production use without a separate agreement.**
 
-4. ATTRIBUTION
-   Any publication, product, or system that utilizes this Software must
-   prominently display the following notice:
-   "Powered by AXIOM RE Kernel. Copyright (c) 2026 Chacha Mwise."
+3. INTEGRITY CLAUSE (THE "SEALED CORE")
+   To ensure the deterministic safety of the System, you may NOT modify the 
+   file 'core.py' if you deploy the Software in any environment (Test or Production). 
+   The Kernel must remain a sealed source of truth. 
+   
+   Wrappers, extensions, and agents that interact with the Kernel via 'bridge.py' 
+   are permitted and encouraged.
 
-5. COMMERCIAL RESTRICTION
-   You may NOT sell, lease, or offer this Software as a standalone
-   Software-as-a-Service (SaaS) or control library without a separate
-   Commercial License Agreement from Chacha Mwise / Aquaflux Tech.
+4. ATTRIBUTION REQUIREMENT
+   Any software, system, research paper, or publication that utilizes this 
+   Software must prominently display the following notice:
+   "Powered by AXIOM RE Kernel. Copyright (c) 2026 Aquaflux Tech."
 
-6. NO WARRANTY
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
-   NON-INFRINGEMENT.
+5. COMMERCIAL & SAAS RESTRICTION
+   You may NOT:
+   (a) Sell, lease, license, or sub-license the Software.
+   (b) Offer the Software as a standalone service (SaaS), API, or library.
+   (c) Use the Software to control live industrial hardware for commercial gain.
+   
+   *To obtain a Commercial Production License (CPL), contact: licensing@aquaflux.co.tz*
+
+6. GOVERNING LAW & JURISDICTION
+   This License shall be governed by the laws of the United Republic of Tanzania. 
+   Any disputes arising from this License shall be settled in the competent courts of 
+   the United Republic of Tanzania.
+
+7. TERMINATION
+   This License explicitly terminates automatically if you violate any of its terms. 
+   Upon termination, you must destroy all copies of the Software in your possession.
+
+8. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+   IMPLIED. THE LICENSOR SHALL NOT BE LIABLE FOR ANY DAMAGES, INCLUDING DIRECT, 
+   INDIRECT, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR 
+   INABILITY TO USE THE SOFTWARE.
+
+9. DUAL LICENSING & EXCEPTIONS
+   Aquaflux Tech reserves the right to license this Software under different terms. 
+   This APL-1.0 Agreement does not limit the Licensor’s right to release the same 
+   Software under a Commercial, Proprietary, or Open Source license to specific partners.
+   
+   If you have purchased a Commercial Production License (CPL), the terms of 
+   that CPL supersede this APL-1.0 license.

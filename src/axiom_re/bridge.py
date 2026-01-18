@@ -1,6 +1,6 @@
 """
 AXIOM RE - The Constitutional Bridge.
-Version: 1.0.0 (Gold Edition)
+Version: 1.0.1 (Dual-License Ready)
 Copyright (c) 2026 Chacha Mwise / Aquaflux Tech.
 License: AXIOM Public License (APL-1.0)
 --------------------------------------------------
@@ -8,7 +8,32 @@ STATELESS VERIFICATION LAYER.
 This module acts as the binary gatekeeper for control actions.
 It utilizes the PhysicsKernel to predict state violations before execution.
 """
+import hashlib
+import os
 from .core import PhysicsKernel
+
+# --- INTEGRITY CONFIGURATION ---
+CERTIFIED_HASH = "8922F9355FD86A98AFF7BC8B8184D3BE8C24DCA0BC50D49984D621FA3EE7C1A6"
+
+def _verify_kernel_integrity() -> bool:
+    """Internal function to validate the PhysicsKernel signature on import."""
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        core_path = os.path.join(current_dir, "core.py")
+        
+        with open(core_path, "rb") as f:
+            current_hash = hashlib.sha256(f.read()).hexdigest()
+            
+        if current_hash != CERTIFIED_HASH:
+            print(f"[AXIOM SECURITY] ⚠️ KERNEL MISMATCH. Expected: {CERTIFIED_HASH[:8]}...")
+            return False
+        return True
+    except Exception:
+        return False
+
+# Execute Security Check on Module Import
+KERNEL_IS_SECURE = _verify_kernel_integrity()
+
 
 def axiom_permission_check(machine_dna: dict, current_state: dict, proposed_action: dict) -> dict:
     """
@@ -21,20 +46,23 @@ def axiom_permission_check(machine_dna: dict, current_state: dict, proposed_acti
     
     Args:
         machine_dna (dict): Configuration containing 'max_potential', 'max_flux', 'rated_power'.
-        current_state (dict): Telemetry data (unused in v1.0 Kernel, reserved for v2.0 State Estimation).
+        current_state (dict): Telemetry data (unused in v1.0 Kernel).
         proposed_action (dict): Intent vector containing 'ratio' (0.0-1.5) or 'hz'.
     
     Returns:
-        dict: A Verdict Object containing:
-              - 'status': "APPROVED" | "BLOCKED"
-              - 'reasons': List of violation codes.
-              - 'safe_action': The substituted safe command (if blocked).
-              - 'efficiency_index': Calculated physical efficiency (0.0 - 1.0).
+        dict: A Verdict Object containing 'status', 'reasons', 'safe_action', 'efficiency_index'.
     """
     
+    # --- 0. SECURITY GATE ---
+    if not KERNEL_IS_SECURE:
+        return {
+            "status": "BLOCKED",
+            "reasons": ["CRITICAL: KERNEL_TAMPERING_DETECTED"],
+            "safe_action": {"ratio": 0.0},
+            "efficiency_index": 0.0
+        }
+
     # --- 1. KERNEL INSTANTIATION (Just-In-Time) ---
-    # The Bridge extracts parameters to build the Law for this specific machine.
-    # Helper to safely get keys (handles 'max_head' vs 'max_pressure')
     def _get_param(keys, default=1.0):
         for k in keys:
             if k in machine_dna: return float(machine_dna[k])
@@ -44,11 +72,9 @@ def axiom_permission_check(machine_dna: dict, current_state: dict, proposed_acti
     max_f = _get_param(['max_flux', 'max_flow', 'max_current', 'max_airflow'])
     rated_p = _get_param(['rated_power', 'power_rating'])
 
-    # The Kernel is instantiated, used for calculation, and discarded (Stateless).
     kernel = PhysicsKernel(max_potential=max_p, max_flux=max_f, rated_power=rated_p)
 
     # --- 2. INTENT NORMALIZATION ---
-    # Converts domain-specific units into a Universal Ratio ($\rho$)
     if 'ratio' in proposed_action:
         ratio = float(proposed_action['ratio'])
     elif 'hz' in proposed_action:
@@ -56,28 +82,27 @@ def axiom_permission_check(machine_dna: dict, current_state: dict, proposed_acti
     elif 'setpoint' in proposed_action:
         ratio = float(proposed_action['setpoint']) / (max_f if max_f > 0 else 1.0)
     else:
-        ratio = 0.0 # Default Safe State
+        ratio = 0.0 
 
-    # --- 3. PHYSICS PROJECTION (The Prediction) ---
-    # Project Potential Energy ($\hat{P}$)
-    predicted_potential = kernel.MAX_POTENTIAL * (ratio**2)
-    # Project Flux ($\hat{F}$) via System Curve Intersection
-    predicted_flux = kernel.solve_geometric_flux(predicted_potential, ratio)
+    # --- 3. PHYSICS PROJECTION ---
+    # Scenario A: Maximum Potential (Zero Flow Condition)
+    predicted_potential_max = kernel.MAX_POTENTIAL * (ratio**2)
+    
+    # Scenario B: Maximum Flux (Zero Resistance Condition)
+    predicted_flux_max = kernel.solve_geometric_flux(current_potential=0.0, ratio=ratio)
 
-    # --- 4. CONSTITUTIONAL CHECK (The Guardrails) ---
+    # --- 4. CONSTITUTIONAL CHECK ---
     violations = []
     
-    # Invariant A: System Integrity (Container Limit)
-    # Default safe limit is 110% of Max Potential if not specified
-    safe_limit = _get_param(['safe_potential_limit', 'safe_pressure_limit', 'safe_voltage_limit'], kernel.MAX_POTENTIAL * 1.1)
-    
-    if predicted_potential > safe_limit:
-        violations.append("CRITICAL: POTENTIAL_LIMIT_EXCEEDED (Integrity Risk)")
+    # Invariant A: System Integrity
+    safe_limit_p = _get_param(['safe_potential_limit', 'safe_pressure_limit'], kernel.MAX_POTENTIAL * 1.1)
+    if predicted_potential_max > safe_limit_p:
+        violations.append(f"CRITICAL: POTENTIAL_LIMIT_EXCEEDED (Pred: {predicted_potential_max:.1f} > Limit: {safe_limit_p:.1f})")
 
-    # Invariant B: Component Health (Flux Limit)
-    flux_limit = kernel.MAX_FLUX * 1.1
-    if predicted_flux > flux_limit:
-        violations.append("CRITICAL: FLUX_LIMIT_EXCEEDED (Component Damage Risk)")
+    # Invariant B: Component Health
+    safe_limit_f = kernel.MAX_FLUX * 1.1
+    if predicted_flux_max > safe_limit_f:
+        violations.append(f"CRITICAL: FLUX_LIMIT_EXCEEDED (Pred: {predicted_flux_max:.1f} > Limit: {safe_limit_f:.1f})")
 
     # Invariant C: Polarity
     if ratio < 0:
@@ -85,7 +110,6 @@ def axiom_permission_check(machine_dna: dict, current_state: dict, proposed_acti
 
     # --- 5. VERDICT GENERATION ---
     if violations:
-        # INTERVENTION: Force Zero Energy State
         return {
             "status": "BLOCKED",
             "reasons": violations,
@@ -93,13 +117,7 @@ def axiom_permission_check(machine_dna: dict, current_state: dict, proposed_acti
             "efficiency_index": 0.0
         }
     else:
-        # APPROVAL: Calculate Physical Efficiency (Output / Input)
-        # This serves as a 'Truth Signal' for any attached AI agent.
-        if ratio > 0.01:
-            efficiency = (predicted_flux / kernel.MAX_FLUX) / ratio
-        else:
-            efficiency = 0.0
-            
+        efficiency = ((predicted_flux_max / kernel.MAX_FLUX) / ratio) if ratio > 0.01 else 0.0
         return {
             "status": "APPROVED",
             "reasons": ["COMPLIANT"],

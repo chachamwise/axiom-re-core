@@ -1,25 +1,40 @@
 """
-AXIOM EXPERIMENT: SAFETY PROOF
-Compares 'Standard RL' vs 'Axiom-Constrained RL'.
-Uses the ACTUAL library code (src/axiom_re) to prove validity.
+AXIOM EXPERIMENT: SAFETY INTEGRITY VERIFICATION
+Comparative Analysis: Unconstrained Control vs. Axiom-Guarded Control.
+
+This script executes a stochastic simulation to verify that the
+Axiom Bridge correctly intercepts and modifies unsafe control signals
+before they reach the physical environment.
 """
 import sys
 import os
 import random
 import pandas as pd
 
-# 1. LINK TO SOURCE CODE
-# Tells Python to look in the 'src' folder for library
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+# 1. LIBRARY PATH CONFIGURATION
+# The system must resolve the path to the local 'src' directory to ensure 
+# the script utilizes the local library version rather than system packages.
+# Path resolution: Current Dir (experiments) -> Parent (root) -> Source (src)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_path = os.path.abspath(os.path.join(current_dir, '..', 'src'))
+sys.path.append(src_path)
 
-# 2. IMPORT THE REAL BRIDGE
-# If this fails, it means the library structure is wrong. This is the true test.
-from axiom_re import axiom_permission_check
+# 2. IMPORT AXIOM LIBRARY
+# Import the 'axiom_re' package. Failure here indicates a directory structure mismatch.
+try:
+    from axiom_re import axiom_permission_check
+except ImportError as e:
+    print("CRITICAL ERROR: Failed to import 'axiom_re' library.")
+    print(f"Search Path: {src_path}")
+    print(f"Technical Details: {e}")
+    print("Ensure you have created the 'src/axiom_re/__init__.py' file.")
+    sys.exit(1)
 
-# --- CONFIGURATION ---
+# --- SIMULATION CONFIGURATION ---
 EPISODES = 500
 SAFE_LIMIT_PRESSURE = 9.5
-# This DNA follows the README schema
+
+# Machine Configuration (DNA) matching standard pump specifications
 MACHINE_DNA = {
     'max_head': 10.0, 
     'max_flow': 50.0, 
@@ -27,86 +42,98 @@ MACHINE_DNA = {
     'safe_pressure_limit': SAFE_LIMIT_PRESSURE
 }
 
-class WaterTankEnv:
+class SimulatedEnvironment:
+    """
+    Simple physics environment representing a pressurized container.
+    """
     def __init__(self):
         self.pressure = 0.0
     
-    def step(self, action_ratio):
-        # Physics: Pressure scales with Ratio squared (Simplified for demo)
-        # Random noise simulates real-world sensor chaos
+    def step(self, control_ratio):
+        # Deterministic Physics: Pressure ~= Ratio^2 * Max_Head
+        # Stochastic Noise: +/- 0.1 to simulate sensor variance
         noise = random.uniform(-0.1, 0.1)
-        self.pressure = (10.0 * (action_ratio**2)) + noise
-        # Ensure pressure doesn't go negative
+        self.pressure = (10.0 * (control_ratio**2)) + noise
         self.pressure = max(0.0, self.pressure)
         return self.pressure
 
-def run_experiment():
-    env = WaterTankEnv()
-    std_violations = 0
-    axm_violations = 0
-    std_history = []
-    axm_history = []
+def run_verification_test():
+    env = SimulatedEnvironment()
     
-    print("🧪 RUNNING: Standard AI vs. AXIOM Bridge...")
+    baseline_violations = 0
+    guarded_violations = 0
+    
+    baseline_history = []
+    guarded_history = []
+    
+    print(f"Starting Safety Verification Loop ({EPISODES} Episodes)...")
 
     for i in range(EPISODES):
-        # --- 1. STANDARD AI (Reckless) ---
-        # Guesses a random action (0.0 to 1.1) - often unsafe
-        raw_action = random.uniform(0.0, 1.1) 
+        # --- 1. GENERATE CONTROL SIGNAL ---
+        # Simulate a stochastic agent generating random inputs (0.0 - 1.1)
+        # Note: Inputs > 0.975 will typically exceed the 9.5 pressure limit.
+        raw_input_signal = random.uniform(0.0, 1.1) 
         
-        # Standard executes directly:
-        p_std = env.step(raw_action)
-        if p_std > SAFE_LIMIT_PRESSURE:
-            std_violations += 1
-        std_history.append(std_violations)
+        # --- 2. BASELINE EXECUTION (Unconstrained) ---
+        # The raw signal is passed directly to the environment.
+        p_baseline = env.step(raw_input_signal)
+        if p_baseline > SAFE_LIMIT_PRESSURE:
+            baseline_violations += 1
+        baseline_history.append(baseline_violations)
 
-        # --- 2. AXIOM AI (Protected) ---
-        # Proposes the SAME reckless action
-        intent = {'ratio': raw_action}
+        # --- 3. AXIOM-GUARDED EXECUTION (Protected) ---
+        intent_vector = {'ratio': raw_input_signal}
         
-        # --- THE REAL TEST: CALL THE LIBRARY ---
-        # Query actual bridge.py
-        verdict = axiom_permission_check(MACHINE_DNA, {'pressure': 0.0}, intent)
+        # Verify signal against Physics Kernel via Bridge
+        verdict = axiom_permission_check(MACHINE_DNA, {'pressure': 0.0}, intent_vector)
         
         if verdict['status'] == 'BLOCKED':
-            # The Library blocked it! Use the safe action it suggested.
-            final_action = verdict['safe_action']['ratio'] 
+            # Signal was deemed unsafe; use the Kernel's safe fallback
+            executed_action = verdict['safe_action']['ratio'] 
         else:
-            final_action = raw_action
+            # Signal was deemed safe; proceed with intent
+            executed_action = raw_input_signal
             
-        # AXIOM executes:
-        p_axm = env.step(final_action)
-        if p_axm > SAFE_LIMIT_PRESSURE:
-            axm_violations += 1 # If this increases, core.py has a bug.
-        axm_history.append(axm_violations)
+        # Execute the validated action
+        p_guarded = env.step(executed_action)
+        
+        # Check if the Kernel failed to prevent a violation
+        if p_guarded > SAFE_LIMIT_PRESSURE:
+            guarded_violations += 1 
+        guarded_history.append(guarded_violations)
 
-    return std_history, axm_history
+    return baseline_history, guarded_history
 
 if __name__ == "__main__":
-    std, axm = run_experiment()
+    baseline_data, guarded_data = run_verification_test()
     
-    # Save Data for the CSV
+    # Export results to CSV for audit trail
     df = pd.DataFrame({
         "Episode": range(EPISODES), 
-        "Standard_Violations": std, 
-        "Axiom_Violations": axm
+        "Baseline_Violations": baseline_data, 
+        "Axiom_Violations": guarded_data
     })
-    df.to_csv("axiom_safety_proof.csv", index=False)
     
-    # --- VISUAL REPORT (The "Money Shot") ---
+    output_path = os.path.join(current_dir, "axiom_safety_proof.csv")
+    df.to_csv(output_path, index=False)
+    
+    # --- GENERATE CONSOLE SUMMARY ---
+    baseline_fail_rate = (baseline_data[-1] / EPISODES) * 100
+    guarded_fail_rate = (guarded_data[-1] / EPISODES) * 100
+
     print("\n" + "="*60)
-    print(f"📊  AXIOM SAFETY VERIFICATION REPORT")
+    print(f"📊 AXIOM CORE: INTEGRITY VERIFICATION REPORT")
     print("="*60)
-    print(f"Total Episodes Run:       {EPISODES}")
+    print(f"Sample Size:            {EPISODES} Episodes")
+    print(f"Safety Limit:           {SAFE_LIMIT_PRESSURE} Units")
     print("-" * 60)
-    print(f"🟥 STANDARD AI VIOLATIONS: {std[-1]}  (Rate: {std[-1]/EPISODES*100:.1f}%)")
-    print(f"🟩 AXIOM AI VIOLATIONS:    {axm[-1]}    (Rate: {axm[-1]/EPISODES*100:.1f}%)")
+    print(f"Baseline (Unprotected): {baseline_data[-1]} Violations ({baseline_fail_rate:.1f}%)")
+    print(f"Axiom Guarded:          {guarded_data[-1]} Violations ({guarded_fail_rate:.1f}%)")
     print("-" * 60)
     
-    if axm[-1] == 0:
-        print("✅  RESULT: INTEGRITY CONFIRMED.")
-        print("    The Sealed Kernel successfully blocked 100% of unsafe actions.")
+    if guarded_data[-1] == 0:
+        print("✅ PASS: Integrity Verified. Zero safety violations detected.")
     else:
-        print("❌  RESULT: INTEGRITY FAILURE.")
+        print("❌ FAIL: Integrity Compromised. Safety violations detected.")
     print("="*60 + "\n")
-    print("✅ Proof saved to experiments/axiom_safety_proof.csv")
+    print(f"Detailed log saved to: {output_path}")

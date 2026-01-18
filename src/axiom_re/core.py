@@ -1,14 +1,16 @@
 """
 AXIOM RE - The Universal Physics Engine.
-Version: 1.0.0 (Gold Edition)
+Version: 1.0.1 (Dual-License Ready)
 Copyright (c) 2026 Chacha Mwise / Aquaflux Tech.
 License: AXIOM Public License (APL-1.0)
 --------------------------------------------------
 SEALED KERNEL. DO NOT MODIFY.
+This file is the "Constitution" of the system.
+Any modification voids the Safety Certificate.
 """
 import math
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 class PhysicsKernel:
     """
@@ -20,9 +22,14 @@ class PhysicsKernel:
     It contains no control policy, no learning parameters, and no internal state.
     
     Attributes:
-        MAX_POTENTIAL (float): The physical limit of potential energy (Head, Voltage, Pressure).
-        MAX_FLUX (float): The physical limit of flow rate (Flow, Current, Velocity).
+        MAX_POTENTIAL (float): The physical limit of potential energy.
+                               (Units: User-defined, e.g., Meters, Bar, Volts).
+        MAX_FLUX (float): The physical limit of flow rate.
+                          (Units: User-defined, e.g., m3/h, Amps, Velocity).
         B_FACTOR (float): Derived system resistance coefficient describing the impedance curve.
+
+        NOTE: Inputs must use consistent units (Dimensional Homogeneity). 
+              Do not mix Imperial and Metric.
     """
     
     def __init__(self, max_potential: float, max_flux: float, rated_power: float):
