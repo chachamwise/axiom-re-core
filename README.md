@@ -22,11 +22,26 @@ Standard AI (RL/NN) is probabilistic and therefore inherently unsafe for zero-to
 
 The system operates as a strict three-layer hierarchy. For a detailed engineering breakdown and safety guarantees, see the [Formal Scope](docs/FORMAL_SCOPE.md).
 
+```mermaid
+graph TD
+    %% NODES
+    A[1. AI AGENT LAYER<br/>External / Untrusted / Stochastic]
+    B[2. CONSTITUTIONAL BRIDGE<br/>bridge.py<br/>'The Gatekeeper']
+    C[3. SEALED PHYSICS KERNEL<br/>core.py]
 
+    %% EDGES
+    A -- "Action (a_t)" --> B
+    B -- "Project State (s_t+1)" --> C
+    B -. "BLOCK / ALLOW" .-> A
 
-1.  **The Agent (External):** Generates a proposed control action ($a_t$). This layer is untrusted and stochastic.
-2.  **The Constitutional Bridge (`bridge.py`):** A stateless interface that intercepts $a_t$. It queries the Kernel to project the future state $\hat{s}_{t+1}$.
-3.  **The Physics Kernel (`core.py`):** The sealed, deterministic core. It contains the algebraic invariants ($\Omega$) and performs the geometric projection of Potential and Flux. It returns raw physics data, not decisions.
+    %% STYLING
+    style A fill:#fff0f0,stroke:#ff0000,stroke-width:2px,stroke-dasharray: 5 5
+    style B fill:#ffffff,stroke:#000000,stroke-width:2px
+    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    
+1. **The Agent (External):** Generates a proposed control action ($a_t$). This layer is untrusted and stochastic.
+2. **The Constitutional Bridge (`bridge.py`):** A stateless interface that intercepts $a_t$. It queries the Kernel to project the future state $\hat{s}_{t+1}$.
+3. **The Physics Kernel (`core.py`):** The sealed, deterministic core. It contains the algebraic invariants ($\Omega$) and performs the geometric projection of Potential and Flux. It returns raw physics data, not decisions.
 
 **See also:** [Preprint Abstract & Contributions](docs/PREPRINT_ABSTRACT.md)
 
