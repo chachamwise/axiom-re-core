@@ -38,7 +38,7 @@ graph TD
     style A fill:#fff0f0,stroke:#ff0000,stroke-width:2px,stroke-dasharray: 5 5
     style B fill:#ffffff,stroke:#000000,stroke-width:2px
     style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    
+```    
 1. **The Agent (External):** Generates a proposed control action ($a_t$). This layer is untrusted and stochastic.
 2. **The Constitutional Bridge (`bridge.py`):** A stateless interface that intercepts $a_t$. It queries the Kernel to project the future state $\hat{s}_{t+1}$.
 3. **The Physics Kernel (`core.py`):** The sealed, deterministic core. It contains the algebraic invariants ($\Omega$) and performs the geometric projection of Potential and Flux. It returns raw physics data, not decisions.
